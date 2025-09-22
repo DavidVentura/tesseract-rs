@@ -11,6 +11,10 @@ mod page_seg_mode;
 
 pub use page_seg_mode::PageSegMode;
 
+pub use plumbing::{
+    BoundingRect, PageIteratorLevel, ResultItem, ResultIterator, ResultIteratorIter,
+};
+
 use self::tesseract_sys::{
     TessOcrEngineMode, TessOcrEngineMode_OEM_DEFAULT, TessOcrEngineMode_OEM_LSTM_ONLY,
     TessOcrEngineMode_OEM_TESSERACT_LSTM_COMBINED, TessOcrEngineMode_OEM_TESSERACT_ONLY,
@@ -236,6 +240,31 @@ impl Tesseract {
 
     pub fn set_page_seg_mode(&mut self, mode: PageSegMode) {
         self.0.set_page_seg_mode(mode.as_tess_page_seg_mode());
+    }
+
+    /// Get a result iterator after performing OCR recognition
+    ///
+    /// Returns `None` if no recognition has been performed or if the iterator
+    /// cannot be created.
+    ///
+    /// # Example
+    /// ```
+    /// # use tesseract::{Tesseract, TesseractError};
+    /// # fn main() -> Result<(), TesseractError> {
+    /// let mut tesseract = Tesseract::new(None, Some("eng"))?
+    ///     .set_image("img.png")?
+    ///     .recognize()?;
+    ///
+    /// if let Some(mut iter) = tesseract.get_iterator() {
+    ///     for word in iter.words() {
+    ///         println!("Word: {:?}, Confidence: {}", word.text, word.confidence);
+    ///     }
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub fn get_iterator(&mut self) -> Option<ResultIterator> {
+        self.0.get_iterator()
     }
 }
 
