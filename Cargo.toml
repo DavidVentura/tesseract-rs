@@ -12,11 +12,22 @@ categories    = ["api-bindings", "multimedia::images"]
 [dependencies]
 tesseract-sys = { git = "https://github.com/DavidVentura/tesseract-sys" }
 tesseract-plumbing = { git = "https://github.com/DavidVentura/tesseract-plumbing" }
+#tesseract-plumbing = { path = "../tesseract-plumbing", default-features = false }
 thiserror = "1.0"
+#png = "0.18.0"
+#png = "0.18.0"
 
 [features]
 default = ["tesseract_5_2"]
 tesseract_5_2 = ["tesseract-plumbing/tesseract_5_2"]
+
+[[bin]]
+name = "ocr_example"
+path = "src/bin/ocr_example.rs"
+
+#[patch.crates-io]
+#leptonica-sys = { path = "../leptonica-sys" }
+#tesseract-sys = { path = "../tesseract-sys" }
 
 [package.metadata.docs.rs]
 # docs.rs is not compatible with tesseract_5_2
